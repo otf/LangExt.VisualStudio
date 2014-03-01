@@ -16,6 +16,11 @@ namespace LangExt.VisualStudio.Syntax
         {
         }
 
+        SyntaxToken Identifier(string id)
+        {
+            return CSharpSyntax.Identifier(id + identities[id]);
+        }
+
         public override SyntaxNode VisitMethodDeclaration(MethodDeclarationSyntax node)
         {
             identities.Clear();
@@ -35,7 +40,7 @@ namespace LangExt.VisualStudio.Syntax
             if (!identities.ContainsKey(id) || identities[id] < 2)
                 return base.VisitIdentifierName(node);
 
-            return base.VisitIdentifierName(node.WithIdentifier(CSharpSyntax.Identifier(id + identities[id])));
+            return base.VisitIdentifierName(node.WithIdentifier(Identifier(id)));
         }
 
         public override SyntaxNode VisitVariableDeclarator(VariableDeclaratorSyntax node)
@@ -52,7 +57,7 @@ namespace LangExt.VisualStudio.Syntax
             }
 
             ++identities[id];
-            return base.VisitVariableDeclarator(node.WithIdentifier(CSharpSyntax.Identifier(id + identities[id])));
+            return base.VisitVariableDeclarator(node.WithIdentifier(Identifier(id)));
         }
     }
 }
