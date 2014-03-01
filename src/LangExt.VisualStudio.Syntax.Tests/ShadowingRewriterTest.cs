@@ -21,6 +21,8 @@ namespace LangExt.VisualStudio.Syntax.Tests
         }
 
         [TestCase(@"int x=0; char x='a';", @"int x=0; char x2='a';")]
+        [TestCase(@"int x=0; for(char x='a'; ; ) { long x=3; }", @"int x=0; for(char x2='a'; ; ) { long x3=3; }")]
+        [TestCase(@"int x=0; for(char x='a'; ; );", @"int x=0; for(char x2='a'; ; );")]
         public void RewriteMethod(string snippet, string expected)
         {
             var methodDeclFormat = "void f(){{ {0} }}";
