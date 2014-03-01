@@ -16,8 +16,8 @@ namespace LangExt.VisualStudio.Syntax.Tests
             var syntaxTree = SyntaxTree.ParseText(source);
             var rootNode = syntaxTree.GetRoot();
             var rewrited = new ShadowingRewriter().Visit(rootNode);
-
-            Assert.That(rewrited.ChildNodes().Single().ChildNodes().Single(node => node is TNode).ToString(), Is.EqualTo(expectedRewrited));
+            var selectedNode = rewrited.ChildNodes().Single().ChildNodes().Single(node => node is TNode);
+            Assert.That(selectedNode.ToString(), Is.EqualTo(expectedRewrited));
         }
 
         [TestCase(@"int x=0; char x='a';", @"int x=0; char x2='a';")]
