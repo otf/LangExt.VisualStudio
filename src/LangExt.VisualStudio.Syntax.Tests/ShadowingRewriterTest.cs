@@ -36,6 +36,14 @@ namespace LangExt.VisualStudio.Syntax.Tests
             AssertRewrite<PropertyDeclarationSyntax>(fullSnippet, fullExpected);
         }
 
+        void AssertRewriteEvent(string snippet, string expected)
+        {
+            var methodDeclFormat = "event EventHandler Event1{{ add {{ {0} }} }}";
+            var fullSnippet = string.Format(methodDeclFormat, snippet);
+            var fullExpected = string.Format(methodDeclFormat, expected);
+            AssertRewrite<EventDeclarationSyntax>(fullSnippet, fullExpected);
+        }
+
         [TestCase(@"int x=0; char x='a';", @"int x=0; char x2='a';")]
         [TestCase(@"int x=0; for(char x='a'; ; ) { long x=3; }", @"int x=0; for(char x2='a'; ; ) { long x3=3; }")]
         [TestCase(@"int x=0; for(char x='a'; ; );", @"int x=0; for(char x2='a'; ; );")]
@@ -49,6 +57,12 @@ namespace LangExt.VisualStudio.Syntax.Tests
         public void ItShouldRewriteProperty(string snippet, string expected)
         {
             AssertRewriteProperty(snippet, expected);
+        }
+
+        [TestCase(@"int x=0; char x='a';", @"int x=0; char x2='a';")]
+        public void ItShouldRewriteEvent(string snippet, string expected)
+        {
+            AssertRewriteEvent(snippet, expected);
         }
 
         [TestCase(@"int x=0;", @"int x=0;")]
