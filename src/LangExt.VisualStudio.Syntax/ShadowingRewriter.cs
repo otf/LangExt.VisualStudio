@@ -31,29 +31,28 @@ namespace LangExt.VisualStudio.Syntax
         public override SyntaxNode VisitIdentifierName(IdentifierNameSyntax node)
         {
             var id = node.Identifier.ValueText;
-            if (identities.ContainsKey(id) && 1 < identities[id])
-                return base.VisitIdentifierName(node.WithIdentifier(CSharpSyntax.Identifier(id + identities[id])));
-            else
+
+            if (!identities.ContainsKey(id) || identities[id] < 2)
                 return base.VisitIdentifierName(node);
+
+            return base.VisitIdentifierName(node.WithIdentifier(CSharpSyntax.Identifier(id + identities[id])));
         }
 
         public override SyntaxNode VisitVariableDeclarator(VariableDeclaratorSyntax node)
         {
             var id = node.Identifier.ValueText;
+
             if (node.Ancestors().Any(anc => anc is FieldDeclarationSyntax))
-                return base.VisitVariableDeclarator(node); ;
+                return base.VisitVariableDeclarator(node);
 
-            if (identities.ContainsKey(id))
-            {
-                ++identities[id];
-                return base.VisitVariableDeclarator(node.WithIdentifier(CSharpSyntax.Identifier(id + identities[id])));
-
-            }
-            else
+            if (!identities.ContainsKey(id))
             {
                 identities[id] = 1;
                 return base.VisitVariableDeclarator(node);
             }
+
+            ++identities[id];
+            return base.VisitVariableDeclarator(node.WithIdentifier(CSharpSyntax.Identifier(id + identities[id])));
         }
     }
 }
